@@ -1,21 +1,51 @@
 <?php
-require_once "Conexion.class.php";
+require_once 'Clientes.class.php';
 
-
+$cliente = new Cliente("","","","","","","");
+$clientes = $cliente->obtenerTodos();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mantenimiento de clientes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Mantenimiento de Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="d-flex justify-content-center flex-column align-items-center">
-        <h1>MANTENIMIENTO DE CLIENTES</h1>
-        <h2>con PDO y usando POO</h2>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<body class="container mt-4">
+    <h1 class="text-center">MANTENIMIENTO DE CLIENTES</h1>
+    <h5 class="text-center text-muted">con PDO y usando POO</h5>
+
+    <table class="table table-striped table-bordered table-hover mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Localidad</th>
+                <th>Provincia</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($clientes as $c): ?>
+            <tr>
+                <td><?= $c->getDni() ?></td>
+                <td><?= $c->getNombre() ?></td>
+                <td><?= $c->getDireccion() ?></td>
+                <td><?= $c->getLocalidad() ?></td>
+                <td><?= $c->getProvincia() ?></td>
+                <td><?= $c->getTelefono() ?></td>
+                <td><?= $c->getEmail() ?></td>
+                <td><a href="editarcliente.php?dni=<?= $c->getDni() ?>">✏️</a></td>
+                <td><a href="borrarcliente.php?dni=<?= $c->getDni() ?>">❌</a></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <a href="clientenuevo.php" class="btn btn-primary">Nuevo Cliente</a>
 </body>
 </html>
