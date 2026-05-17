@@ -63,6 +63,7 @@ class Cliente {
     }
 
     public static function exiteDNI($p_dni){
+        try{
         $pdo = Conexion::pdo();
 
         
@@ -79,13 +80,18 @@ class Cliente {
             $existe = false;
             return $existe;
         }
+        }catch(PDOException $e){
+            echo"Error en la comprobacion de los DNI". $e->getMessage();
+        }
     }
 
     public function clienteNuevo(){
+        try{
+
         $pdo = Conexion::pdo();
 
         $stmt = $pdo->prepare(
-        "INSERT INTO clientes(DNI,Nombre,Direccion,Localidad,Provincias,Telefono,e-mail)
+        "INSERT INTO clientes(DNI,Nombre,Direccion,Localidad,Provincias,Telefono,`e-mail`)
         VALUES(:dni,:nombre,:direccion,:localidad,:provincia,:telefono,:email)");
         $stmt -> execute(
             [
@@ -93,9 +99,46 @@ class Cliente {
             ":nombre"       => $this->nombre,
             ":direccion"    => $this->direccion,
             ":localidad"    => $this->localidad,
+            ":provincia"    => $this->provincia,
             ":telefono"     => $this->telefono,
-            ":email"        => $this->email]
+            ":email"        => $this->email
+            ]
         );
+        } catch(PDOException $e){
+            echo "Error en al insercion de los datos" . $e->getMessage();
+        }
+    }
+
+    public function obtenerCliente(){
+        try{
+
+
+        $pdo = Conexion::pdo();
+
+        $stmt = $pdo->prepare("SELECT * FROM clientes WHERE DNI = :dni");
+        $stmt -> execute([
+            ":dni" => $this -> dni
+        ]);
+
+        while($fila = $stmt->fetch()){
+            $cliente = new Cliente(
+                $fila['DNI'],
+                $fila['Nombre'],
+                $fila['Direccion'],
+                $fila['Localidad'],
+                $fila['Provincias'],
+                $fila['Telefono'],
+                $fila['e-mail']
+            );
+
+            return $cliente;
+        }
+
+        
+
+        }catch(PDOException $e){
+            echo "Fallo en la consulta de obtenmcion de datos dfe cliente en concreto" . $e->getMessage();
+        }
     }
 }
 ?>

@@ -35,6 +35,7 @@ function validaciones($dni,$nombre,$email,$existDni){
 
     if (empty($dni) || empty($nombre) || empty($email)){
         $errores[] = "Los campos dni,nombre y email son obligatorios";
+        var_dump($dni);
     }
     if(preg_match('/^[0-9]{8}[A-Za-z]$/', $dni) === 0){
         $errores[] = "El formato del dni es incorrecto";
