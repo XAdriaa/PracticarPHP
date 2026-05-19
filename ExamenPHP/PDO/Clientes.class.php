@@ -140,5 +140,33 @@ class Cliente {
             echo "Fallo en la consulta de obtenmcion de datos dfe cliente en concreto" . $e->getMessage();
         }
     }
+
+    public function editarCliente(){
+        try{
+        $pdo = Conexion::pdo();
+
+        $stmt = $pdo->prepare(
+            "UPDATE clientes
+            set Nombre = :nombre,
+            Direccion = :direccion,
+            Localidad = :localidad,
+            Provincias = :provincia,
+            Telefono = :telefono,
+            `e-mail` = :email 
+            WHERE dni = :dni");
+        $stmt -> execute([
+            ":dni" => $this -> dni,
+            ":nombre" => $this -> nombre,
+            ":direccion" => $this -> direccion,
+            ":localidad" => $this -> localidad,
+            ":provincia" => $this -> provincia,
+            ":telefono" => $this -> telefono,
+            ":email" => $this -> email
+        ]);
+
+        }catch(PDOException $e){
+            echo"Error al modificar un cliente" . $e -> getMessage();
+        }
+    }
 }
 ?>
