@@ -8,14 +8,17 @@ $pdo = new Cliente($dni,"","","","","","");
 $datos[] = $pdo ->obtenerCliente();
 
 if($_SERVER["REQUEST_METHOD"] === "POST"){
+    $dni = $_POST['dni'];
     $nombre = $_POST['nombre'];
     $direccion = $_POST['direccion'];
-    $Localidad = $_POST['localidad'];
-    $Provincia = $_POST['provincia'];
-    $Telefono = $_POST['telefono'];
+    $localidad = $_POST['localidad'];
+    $provincia = $_POST['provincia'];
+    $telefono = $_POST['telefono'];
     $email = $_POST['email'];
 
-    
+    $modCliente = new Cliente($dni,$nombre,$direccion,$localidad,$provincia,$telefono,$email);
+    $modCliente->editarCliente();
+    header('Location: Index.php');
 }
 ?>
 <!DOCTYPE html>
@@ -59,25 +62,29 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     <div class="d-flex w-75 mx-auto justify-content-center flex-column">
         <h1>Datos nuevos</h1>
         <form method="POST" class="d-flex flex-column">
+            <?php foreach($datos as $d):?>
+            <input type="hidden" id="dni" name="dni" value="<?= $d -> getDni() ?>" />
+
             <label>Nombre</label>
-            <input type="text" id="nombre" name="nombre"/>
+            <input type="text" id="nombre" name="nombre" value="<?= $d ->getNombre() ?>"/>
 
             <label>Direccion</label>
-            <input type="text" id="direccion" name="direccion"/>
+            <input type="text" id="direccion" name="direccion" value="<?= $d ->getDireccion() ?>"/>
 
             <label>Localidad</label>
-            <input type="text" id="localidad" name="localidad"/>
+            <input type="text" id="localidad" name="localidad" value="<?= $d ->getLocalidad() ?>"/>
 
             <label>Provincias</label>
-            <input type="text" id="provincias" name="provincias"/>
+            <input type="text" id="provincia" name="provincia" value="<?= $d ->getProvincia() ?>"/>
             
             <label>Telefono</label>
-            <input type="text" id="telefono" name="telefono"/>
+            <input type="text" id="telefono" name="telefono" value="<?= $d ->getTelefono() ?>"/>
             
             <label>Email</label>
-            <input type="text" id="email" name="email"/>
+            <input type="text" id="email" name="email" value="<?= $d ->getEmail() ?>"/>
 
             <button class="btn btn-primary  mt-5">Modificar</button>
+            <?php endforeach;?>
         </form>
     </div>
 </body>

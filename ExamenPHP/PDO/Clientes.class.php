@@ -163,9 +163,21 @@ class Cliente {
             ":telefono" => $this -> telefono,
             ":email" => $this -> email
         ]);
-
         }catch(PDOException $e){
             echo"Error al modificar un cliente" . $e -> getMessage();
+        }
+    }
+
+    public function borrarCliente(){
+        try{
+        $pdo = Conexion::pdo();
+
+        $stmt = $pdo->prepare("DELETE FROM clientes WHERE DNI = :dni");
+        $stmt->execute([
+            ":dni" => $this -> dni
+        ]);
+        }catch(PDOException $e){
+            echo "Error al borrar un usuario" . $e->getMessage();
         }
     }
 }

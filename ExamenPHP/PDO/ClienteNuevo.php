@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $existDni = Cliente::exiteDNI($dni);
 
-    $errores = validaciones($dni,$nombre,$email,$existDni);
+    $errores = validaciones($dni,$nombre,$email,$existDni,$telefono);
 
     if(empty($errores)){
     $newCliente = new Cliente($dni,$nombre,$direccion,$localidad,$provincia,$telefono,$email);
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 //validaciones
-function validaciones($dni,$nombre,$email,$existDni){
+function validaciones($dni,$nombre,$email,$existDni,$telefono){
     
     $errores = [];
     
@@ -39,6 +39,9 @@ function validaciones($dni,$nombre,$email,$existDni){
     }
     if(preg_match('/^[0-9]{8}[A-Za-z]$/', $dni) === 0){
         $errores[] = "El formato del dni es incorrecto";
+    }
+    if(preg_match('/^[0-9]{9}$/',$telefono) === 0){
+        $errores[] = "El formato del telefono es incorrecto";
     }
     if($existDni){
         $errores[] = "dni ya registrado";
