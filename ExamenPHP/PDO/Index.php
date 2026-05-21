@@ -47,5 +47,6 @@ $clientes = $cliente->obtenerTodos();
     </table>
 
     <a href="clientenuevo.php" class="btn btn-primary">Nuevo Cliente</a>
+    <a  href="../Sesion/logout.php" class="btn btn-primary">Cerrar session</a>
 </body>
 </html>
