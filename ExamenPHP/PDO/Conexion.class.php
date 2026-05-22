@@ -1,5 +1,4 @@
 <?php
-
 class conexion {
 
     public static function pdo(){

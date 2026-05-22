@@ -1,4 +1,9 @@
 <?php
+session_start();
+if(!isset($_SESSION)){
+    header("Location: ../Sesion/Login.php");
+    exit();
+}
 require_once 'Clientes.class.php';
 
 $dni = $_GET["dni"];
