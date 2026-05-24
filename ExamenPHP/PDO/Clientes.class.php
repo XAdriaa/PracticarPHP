@@ -40,7 +40,7 @@ class Cliente {
     public function setEmail($email)         { $this->email     = $email; }
 
 
-    public function obtenerTodos() {
+    public static function obtenerTodos() {
         $pdo = Conexion::pdo();
         
         $clientes = [];

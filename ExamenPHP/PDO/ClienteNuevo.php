@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION)){
+if(!isset($_SESSION['dni'])){
     header("Location: ../Sesion/Login.php");
     exit();
 }

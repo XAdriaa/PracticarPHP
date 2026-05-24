@@ -1,13 +1,12 @@
 <?php
 session_start();
-if(!isset($_SESSION)){
+if(!isset($_SESSION['dni'])){
     header("Location: ../Sesion/Login.php");
     exit();
 }
 require_once 'Clientes.class.php';
 
-$cliente = new Cliente("","","","","","","");
-$clientes = $cliente->obtenerTodos();
+$clientes = Cliente::obtenerTodos();
 ?>
 
 <!DOCTYPE html>
@@ -50,8 +49,16 @@ $clientes = $cliente->obtenerTodos();
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <a href="clientenuevo.php" class="btn btn-primary">Nuevo Cliente</a>
-    <a  href="../Sesion/logout.php" class="btn btn-primary">Cerrar session</a>
+    <div class="d-flex justify-content-between">
+        <div>
+            <a href="clientenuevo.php" class="btn btn-primary">Nuevo Cliente</a>
+            <a  href="../Sesion/logout.php" class="btn btn-primary">Cerrar session</a>
+        </div>
+        <div>
+            <a  href="../Cookies/VerGrupos.php" class="btn btn-secondary">Ver grupos</a>
+            <a  href="../Cookies/CrearGrupo.php" class="btn btn-secondary">Crear grupo</a>
+            <a  href="../Cookies/ModificarGrupo.php" class="btn btn-secondary">Modificar grupo</a>
+        </div>
+    </div>
 </body>
 </html>
