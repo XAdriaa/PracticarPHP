@@ -5,6 +5,14 @@ if(!isset($_SESSION['dni'])){
     exit();
 }
 
+$nameCookie = $_GET["name"];
+
+if($_SERVER['REQUEST_METHOD']=== 'POST'){
+    $nameCookie = $_POST['N_group'];
+}
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,8 +26,11 @@ if(!isset($_SESSION['dni'])){
     <div>
         <form method ="post">
             <label>Nombre del grupo</label>
-            <input/>
+            <input type="text" name="N_group" value="<?=$nameCookie ?>"/>
         </form>
+    </div>
+    <div>
+
     </div>
 </body>
 </html>

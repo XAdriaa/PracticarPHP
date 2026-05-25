@@ -6,6 +6,7 @@ if(!isset($_SESSION['dni'])){
 }
 
 $dni = "";
+$name = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $name = $_POST['N_Grupo'];
@@ -39,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <button class="btn btn-primary" type="submit">Crear Grupo</button>
             <a class="btn btn-warning" href="../PDO/Index.php">Volver al inicio</a>
             <a  class="btn btn-secondary" href="VerGrupos.php">Ver grupos</a>
-            <a class="btn btn-secondary" href="ModificarGrupo.php">Modificar grupos</a>
+            <a class="btn btn-secondary" href="ModificarGrupo.php?name=<?= $name?>">Modificar grupos</a>
         </form>
     </div>
 </body>
