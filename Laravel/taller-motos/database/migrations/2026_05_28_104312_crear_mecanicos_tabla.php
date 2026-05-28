@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('mecanicos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre',20);
-            $table->string('email',100)->unique();
-            $table->string('contraseña',100);
-            $table->enum('rol',['admin','cliente'])->default('cliente');
-            $table->string('telefono',9)->nullable();
+            $table->string('nombre', 50);
+            $table->foreignId('especialidad_id')->constrained('especialidades')->onDelete('restrict');
+            $table->string('telefono', 9)->nullable();
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('mecanicos');
     }
 };

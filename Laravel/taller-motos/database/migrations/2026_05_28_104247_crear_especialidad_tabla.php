@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('especialidades', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre',20);
-            $table->string('email',100)->unique();
-            $table->string('contraseña',100);
-            $table->enum('rol',['admin','cliente'])->default('cliente');
-            $table->string('telefono',9)->nullable();
+            $table->string('nombre', 100)->unique();
+            $table->text('descripcion')->nullable();
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('especialidades');
     }
 };
