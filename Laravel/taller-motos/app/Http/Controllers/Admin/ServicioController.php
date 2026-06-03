@@ -3,63 +3,61 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Servicio;
+use App\Models\ServicioCategoria;
 use Illuminate\Http\Request;
 
 class ServicioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $servicios = Servicio::with('categoria')->get();
+        return view('admin.servicios.index', compact('servicios'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categorias = ServicioCategoria::all();
+        return view('admin.servicios.create', compact('categorias'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'servicios_categoria_id' => 'required|exists:servicios_categorias,id',
+            'nombre'                 => 'required|string|max:100',
+            'descripcion'            => 'nullable|string',
+            'precio_base'            => 'required|numeric|min:0',
+        ]);
+
+        Servicio::create($request->all());
+
+        return redirect()->route('admin.servicios.index')->with('success', 'Servicio creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Servicio $servicio)
     {
-        //
+        $categorias = ServicioCategoria::all();
+        return view('admin.servicios.edit', compact('servicio', 'categorias'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Servicio $servicio)
     {
-        //
+        $request->validate([
+            'servicios_categoria_id' => 'required|exists:servicios_categorias,id',
+            'nombre'                 => 'required|string|max:100',
+            'descripcion'            => 'nullable|string',
+            'precio_base'            => 'required|numeric|min:0',
+        ]);
+
+        $servicio->update($request->all());
+
+        return redirect()->route('admin.servicios.index')->with('success', 'Servicio actualizado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Servicio $servicio)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $servicio->delete();
+        return redirect()->route('admin.servicios.index')->with('success', 'Servicio eliminado correctamente.');
     }
 }

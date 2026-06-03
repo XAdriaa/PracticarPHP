@@ -3,63 +3,62 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PedidoReparacion;
+use App\Models\Mecanico;
+use App\Models\Servicio;
 use Illuminate\Http\Request;
 
 class OrdenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $ordenes = PedidoReparacion::with(['moto.user', 'moto.marca', 'mecanico'])->get();
+        return view('admin.ordenes.index', compact('ordenes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(PedidoReparacion $orden)
     {
-        //
+        $orden->load(['moto.user', 'moto.marca', 'mecanico', 'servicios']);
+        return view('admin.ordenes.show', compact('orden'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function edit(PedidoReparacion $orden)
     {
-        //
+        $mecanicos = Mecanico::with('especialidad')->get();
+        $servicios = Servicio::with('categoria')->get();
+        $orden->load('servicios');
+        return view('admin.ordenes.edit', compact('orden', 'mecanicos', 'servicios'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, PedidoReparacion $orden)
     {
-        //
+        $request->validate([
+            'mecanico_id'  => 'nullable|exists:mecanicos,id',
+            'status'       => 'required|in:pendiente,reparando,listo,entregada',
+            'descripcion'  => 'nullable|string',
+            'fecha_salida' => 'nullable|date|after_or_equal:fecha_entrada',
+        ]);
+
+        $orden->update($request->only('mecanico_id', 'status', 'descripcion', 'fecha_salida'));
+
+        // Sincronizar servicios con cantidad y precio
+        if ($request->has('servicios')) {
+            $serviciosSync = [];
+            foreach ($request->servicios as $servicioId => $datos) {
+                $serviciosSync[$servicioId] = [
+                    'cantidad' => $datos['cantidad'] ?? 1,
+                    'precio'   => $datos['precio'],
+                ];
+            }
+            $orden->servicios()->sync($serviciosSync);
+        }
+
+        return redirect()->route('admin.ordenes.show', $orden)->with('success', 'Orden actualizada correctamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(PedidoReparacion $orden)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $orden->delete();
+        return redirect()->route('admin.ordenes.index')->with('success', 'Orden eliminada correctamente.');
     }
 }

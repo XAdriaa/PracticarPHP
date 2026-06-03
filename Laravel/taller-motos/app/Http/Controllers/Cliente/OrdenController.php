@@ -3,63 +3,58 @@
 namespace App\Http\Controllers\Cliente;
 
 use App\Http\Controllers\Controller;
+use App\Models\PedidoReparacion;
+use App\Models\Moto;
 use Illuminate\Http\Request;
 
 class OrdenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $ordenes = PedidoReparacion::whereHas('moto', function ($q) {
+            $q->where('user_id', auth()->id());
+        })->with(['moto.marca', 'mecanico'])->get();
+
+        return view('cliente.ordenes.index', compact('ordenes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $motos = auth()->user()->motos()->with('marca')->get();
+        return view('cliente.ordenes.create', compact('motos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'moto_id'     => 'required|exists:motos,id',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        // Verificar que la moto pertenece al cliente
+        $moto = Moto::findOrFail($request->moto_id);
+        if ($moto->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        PedidoReparacion::create([
+            'moto_id'       => $request->moto_id,
+            'descripcion'   => $request->descripcion,
+            'fecha_entrada' => now()->toDateString(),
+            'status'        => 'pendiente',
+        ]);
+
+        return redirect()->route('cliente.ordenes.index')->with('success', 'Orden creada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(PedidoReparacion $orden)
     {
-        //
-    }
+        // Verificar que la orden pertenece al cliente
+        if ($orden->moto->user_id !== auth()->id()) {
+            abort(403);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $orden->load(['moto.marca', 'mecanico', 'servicios']);
+        return view('cliente.ordenes.show', compact('orden'));
     }
 }

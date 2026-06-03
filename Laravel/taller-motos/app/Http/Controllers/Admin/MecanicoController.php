@@ -3,63 +3,59 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mecanico;
+use App\Models\Especialidad;
 use Illuminate\Http\Request;
 
 class MecanicoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $mecanicos = Mecanico::with('especialidad')->get();
+        return view('admin.mecanicos.index', compact('mecanicos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $especialidades = Especialidad::all();
+        return view('admin.mecanicos.create', compact('especialidades'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre'          => 'required|string|max:50',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'telefono'        => 'nullable|string|size:9',
+        ]);
+
+        Mecanico::create($request->all());
+
+        return redirect()->route('admin.mecanicos.index')->with('success', 'Mecánico creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Mecanico $mecanico)
     {
-        //
+        $especialidades = Especialidad::all();
+        return view('admin.mecanicos.edit', compact('mecanico', 'especialidades'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Mecanico $mecanico)
     {
-        //
+        $request->validate([
+            'nombre'          => 'required|string|max:50',
+            'especialidad_id' => 'required|exists:especialidades,id',
+            'telefono'        => 'nullable|string|size:9',
+        ]);
+
+        $mecanico->update($request->all());
+
+        return redirect()->route('admin.mecanicos.index')->with('success', 'Mecánico actualizado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Mecanico $mecanico)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $mecanico->delete();
+        return redirect()->route('admin.mecanicos.index')->with('success', 'Mecánico eliminado correctamente.');
     }
 }

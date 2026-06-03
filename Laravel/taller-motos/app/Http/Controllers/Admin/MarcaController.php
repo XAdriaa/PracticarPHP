@@ -3,63 +3,54 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Marca;
 use Illuminate\Http\Request;
 
 class MarcaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $marcas = Marca::all();
+        return view('admin.marcas.index', compact('marcas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.marcas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:50|unique:marcas',
+            'pais'   => 'nullable|string|max:100',
+        ]);
+
+        Marca::create($request->all());
+
+        return redirect()->route('admin.marcas.index')->with('success', 'Marca creada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Marca $marca)
     {
-        //
+        return view('admin.marcas.edit', compact('marca'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Marca $marca)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:50|unique:marcas,nombre,' . $marca->id,
+            'pais'   => 'nullable|string|max:100',
+        ]);
+
+        $marca->update($request->all());
+
+        return redirect()->route('admin.marcas.index')->with('success', 'Marca actualizada correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Marca $marca)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $marca->delete();
+        return redirect()->route('admin.marcas.index')->with('success', 'Marca eliminada correctamente.');
     }
 }
