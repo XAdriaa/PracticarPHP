@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Servicio extends Model
 {
+    protected $table = 'servicios';
     protected $fillable = ['servicios_categoria_id', 'nombre', 'descripcion', 'precio_base'];
 
     // Un servicio pertenece a una categoría

@@ -36,7 +36,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Órdenes
-    Route::resource('ordenes', AdminOrdenController::class);
+    Route::resource('ordenes', AdminOrdenController::class)->parameters(['ordenes' => 'orden']);
 
     // Mecánicos
     Route::resource('mecanicos', MecanicoController::class);

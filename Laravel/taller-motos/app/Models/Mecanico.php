@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mecanico extends Model
 {
+    protected $table = 'mecanicos';
     protected $fillable = ['nombre', 'especialidad_id', 'telefono'];
 
     // Un mecánico pertenece a una especialidad

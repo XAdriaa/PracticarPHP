@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Moto extends Model
 {
+    protected $table = 'motos';
     protected $fillable = ['user_id', 'marca_id', 'modelo', 'año', 'matricula', 'kilometros'];
 
     // Una moto pertenece a un usuario
