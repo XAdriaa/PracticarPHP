@@ -3,18 +3,22 @@
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card border-0 shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Nuevo Servicio</h3>
+                <h2 class="mb-0">
+                    <i class="bi bi-plus-circle me-2"></i>Nuevo Servicio
+                </h2>
             </div>
-            <div class="card-body">
-                <form action="{{ route('admin.servicios.store') }}" method="POST">
+            <div class="card-body p-5">
+                <form action="{{ route('admin.servicios.store') }}" method="POST" novalidate>
                     @csrf
 
-                    <div class="mb-3">
-                        <label class="form-label">Categoría</label>
-                        <select name="servicios_categoria_id" class="form-select @error('servicios_categoria_id') is-invalid @enderror" required>
-                            <option value="">-- Selecciona --</option>
+                    <div class="mb-4">
+                        <label class="form-label d-flex align-items-center">
+                            <i class="bi bi-tag text-primary me-2"></i> Categoría
+                        </label>
+                        <select name="servicios_categoria_id" class="form-select form-select-lg @error('servicios_categoria_id') is-invalid @enderror" required>
+                            <option value="">-- Selecciona una categoría --</option>
                             @foreach($categorias as $categoria)
                                 <option value="{{ $categoria->id }}" {{ old('servicios_categoria_id') == $categoria->id ? 'selected' : '' }}>
                                     {{ $categoria->nombre }}
@@ -22,37 +26,47 @@
                             @endforeach
                         </select>
                         @error('servicios_categoria_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" required maxlength="100">
+                    <div class="mb-4">
+                        <label class="form-label d-flex align-items-center">
+                            <i class="bi bi-tools text-primary me-2"></i> Nombre
+                        </label>
+                        <input type="text" name="nombre" class="form-control form-control-lg @error('nombre') is-invalid @enderror" value="{{ old('nombre') }}" placeholder="Ej: Cambio de aceite" required maxlength="100">
                         @error('nombre')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <textarea name="descripcion" class="form-control @error('descripcion') is-invalid @enderror" rows="3">{{ old('descripcion') }}</textarea>
+                    <div class="mb-4">
+                        <label class="form-label d-flex align-items-center">
+                            <i class="bi bi-text-paragraph text-primary me-2"></i> Descripción
+                        </label>
+                        <textarea name="descripcion" class="form-control form-control-lg @error('descripcion') is-invalid @enderror" rows="3" placeholder="Describe el servicio...">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Precio base (€)</label>
-                        <input type="number" name="precio_base" class="form-control @error('precio_base') is-invalid @enderror" value="{{ old('precio_base') }}" step="0.01" min="0" required>
+                    <div class="mb-4">
+                        <label class="form-label d-flex align-items-center">
+                            <i class="bi bi-currency-euro text-primary me-2"></i> Precio Base (€)
+                        </label>
+                        <input type="number" name="precio_base" class="form-control form-control-lg @error('precio_base') is-invalid @enderror" value="{{ old('precio_base') }}" placeholder="0.00" step="0.01" min="0" required>
                         @error('precio_base')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ route('admin.servicios.index') }}" class="btn btn-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                            <i class="bi bi-check-circle me-2"></i>Guardar Servicio
+                        </button>
+                        <a href="{{ route('admin.servicios.index') }}" class="btn btn-light btn-lg">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
                     </div>
                 </form>
             </div>
