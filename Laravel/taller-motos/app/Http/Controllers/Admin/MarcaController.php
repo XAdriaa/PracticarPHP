@@ -50,7 +50,13 @@ class MarcaController extends Controller
 
     public function destroy(Marca $marca)
     {
-        $marca->delete();
-        return redirect()->route('admin.marcas.index')->with('success', 'Marca eliminada correctamente.');
+    // Verificar si la marca tiene motos asociadas
+    if ($marca->motos()->count() > 0) {
+        return redirect()->route('admin.marcas.index')
+            ->with('error', 'No se puede eliminar la marca "' . $marca->nombre . '" porque tiene ' . $marca->motos()->count() . ' moto(s) asignada(s).');
+    }
+
+    $marca->delete();
+    return redirect()->route('admin.marcas.index')->with('success', 'Marca eliminada correctamente.');
     }
 }

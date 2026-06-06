@@ -34,28 +34,31 @@ class OrdenController extends Controller
 
     public function update(Request $request, PedidoReparacion $orden)
     {
-        $request->validate([
-            'mecanico_id'  => 'nullable|exists:mecanicos,id',
-            'status'       => 'required|in:pendiente,reparando,listo,entregada',
-            'descripcion'  => 'nullable|string',
-            'fecha_salida' => 'nullable|date|after_or_equal:fecha_entrada',
-        ]);
+    $request->validate([
+        'mecanico_id'  => 'nullable|exists:mecanicos,id',
+        'status'       => 'required|in:pendiente,reparando,listo,entregada',
+        'descripcion'  => 'nullable|string',
+        'fecha_salida' => 'nullable|date|after_or_equal:fecha_entrada',
+    ]);
 
-        $orden->update($request->only('mecanico_id', 'status', 'descripcion', 'fecha_salida'));
+    $orden->update($request->only('mecanico_id', 'status', 'descripcion', 'fecha_salida'));
 
-        // Sincronizar servicios con cantidad y precio
-        if ($request->has('servicios')) {
-            $serviciosSync = [];
-            foreach ($request->servicios as $servicioId => $datos) {
+    // Sincronizar servicios con cantidad y precio
+    if ($request->has('servicios')) {
+        $serviciosSync = [];
+        foreach ($request->servicios as $servicioId => $datos) {
+            // Solo procesar si tiene precio (checkbox marcado)
+            if (isset($datos['precio'])) {
                 $serviciosSync[$servicioId] = [
                     'cantidad' => $datos['cantidad'] ?? 1,
                     'precio'   => $datos['precio'],
                 ];
             }
-            $orden->servicios()->sync($serviciosSync);
         }
+        $orden->servicios()->sync($serviciosSync);
+    }
 
-        return redirect()->route('admin.ordenes.show', $orden)->with('success', 'Orden actualizada correctamente.');
+    return redirect()->route('admin.ordenes.show', $orden)->with('success', 'Orden actualizada correctamente.');
     }
 
     public function destroy(PedidoReparacion $orden)

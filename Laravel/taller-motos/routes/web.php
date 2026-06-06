@@ -26,7 +26,7 @@ Route::middleware(['auth', 'role:cliente'])->prefix('cliente')->name('cliente.')
     Route::resource('motos', MotoController::class);
 
     // Mis Órdenes
-    Route::resource('ordenes', ClienteOrdenController::class)->only(['index', 'create', 'store', 'show']);
+    Route::resource('ordenes', ClienteOrdenController::class)->only(['index', 'create', 'store', 'show'])->parameters(['ordenes' => 'orden']);
 });
 
 // ─── Rutas Admin ──────────────────────────────────────────────

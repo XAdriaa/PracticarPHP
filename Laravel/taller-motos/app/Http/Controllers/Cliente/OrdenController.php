@@ -49,12 +49,12 @@ class OrdenController extends Controller
 
     public function show(PedidoReparacion $orden)
     {
-        // Verificar que la orden pertenece al cliente
-        if ($orden->moto->user_id !== auth()->id()) {
-            abort(403);
-        }
+    // Verificar que la orden pertenece al usuario autenticado
+    if ($orden->moto->user_id !== auth()->id()) {
+        abort(403, 'Esta orden no te pertenece.');
+    }
 
-        $orden->load(['moto.marca', 'mecanico', 'servicios']);
-        return view('cliente.ordenes.show', compact('orden'));
+    $orden->load(['moto.user', 'moto.marca', 'mecanico', 'servicios']);
+    return view('cliente.ordenes.show', compact('orden'));
     }
 }
