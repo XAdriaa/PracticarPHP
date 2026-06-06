@@ -13,7 +13,9 @@ class OrdenController extends Controller
     public function index()
     {
         $ordenes = PedidoReparacion::with(['moto.user', 'moto.marca', 'mecanico'])->get();
-        return view('admin.ordenes.index', compact('ordenes'));
+        $mecanicos = Mecanico::all();
+        
+        return view('admin.ordenes.index', compact('ordenes', 'mecanicos'));
     }
 
     public function show(PedidoReparacion $orden)

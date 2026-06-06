@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class PedidoReparacion extends Model
 {
     protected $table = 'pedidos_reparacion';
-
     protected $fillable = ['moto_id', 'mecanico_id', 'descripcion', 'status', 'fecha_entrada', 'fecha_salida'];
+
+    protected $casts = [
+        'fecha_entrada' => 'datetime',
+        'fecha_salida' => 'datetime',
+    ];
 
     // Un pedido pertenece a una moto
     public function moto()

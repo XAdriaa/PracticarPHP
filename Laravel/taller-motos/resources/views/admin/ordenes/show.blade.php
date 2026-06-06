@@ -91,7 +91,11 @@
         </h6>
     </div>
     <div class="card-body">
-        <p class="mb-0">{{ $orden->descripcion ?? '<span class="text-muted">Sin descripción</span>' }}</p>
+        @if($orden->descripcion)
+            <p class="mb-0">{{ $orden->descripcion }}</p>
+        @else
+            <span class="text-muted">Sin descripción</span>
+        @endif
     </div>
 </div>
 
@@ -129,16 +133,16 @@
                         @endforeach
                         <tr class="table-active border-top">
                             <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                            <td class="text-end"><strong class="text-danger fs-5">{{ number_format($orden->servicios->sum(fn($s) => $s->pivot->precio * $s->pivot->cantidad), 2) }} €</strong></td>
+                            <td class="text-end">
+                                <strong class="text-danger fs-5">
+                                    {{ number_format($orden->servicios->sum(fn($s) => $s->pivot->precio * $s->pivot->cantidad), 2) }} €
+                                </strong>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         @endif
-    </div>
-</div>
-@endsection
-        </div>
     </div>
 </div>
 @endsection

@@ -71,21 +71,22 @@
                                         @break
                                 @endswitch
                             </td>
-                            <td>{{ (new DateTime($orden->fecha_entrada))->format('d/m/Y H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($orden->fecha_entrada)->format('d/m/Y H:i') }}</td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#viewOrdenModal-{{ $orden->id }}">
+                                <a href="{{ route('admin.ordenes.show', $orden) }}" class="btn btn-sm btn-info me-1">
                                     <i class="bi bi-eye"></i> Ver
-                                </button>
-                                <button type="button" class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editOrdenModal-{{ $orden->id }}">
+                                </a>
+                                <a href="{{ route('admin.ordenes.edit', $orden) }}" class="btn btn-sm btn-warning me-1">
                                     <i class="bi bi-pencil-square"></i> Editar
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteOrdenModal-{{ $orden->id }}">
-                                    <i class="bi bi-trash"></i> Eliminar
-                                </button>
-
-                                @include('admin.ordenes.modals.view')
-                                @include('admin.ordenes.modals.edit')
-                                @include('admin.ordenes.modals.delete')
+                                </a>
+                                <form action="{{ route('admin.ordenes.destroy', $orden) }}" method="POST" class="d-inline"
+                                      onsubmit="return confirm('¿Eliminar la orden #{{ $orden->id }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @empty
